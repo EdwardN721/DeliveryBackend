@@ -1,5 +1,5 @@
-using Delivery.Core.Entities.Identity;
 using Microsoft.EntityFrameworkCore;
+using Delivery.Core.Entities.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Delivery.Infrastructure.Configurations.Identity;
@@ -37,7 +37,8 @@ public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
         AuditConfiguration.ConfigureAuditBase(builder);
 
         builder.HasMany(u => u.Roles)
-        .WithMany(r => r.Usuarios);
+        .WithMany(r => r.Usuarios)
+        .UsingEntity("UsuarioRoles");
 
         builder.HasMany(u => u.Direcciones)
         .WithOne(ud => ud.Usuario)

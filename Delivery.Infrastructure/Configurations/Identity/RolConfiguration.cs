@@ -1,5 +1,5 @@
-using Delivery.Core.Entities.Identity;
 using Microsoft.EntityFrameworkCore;
+using Delivery.Core.Entities.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Delivery.Infrastructure.Configurations.Identity;

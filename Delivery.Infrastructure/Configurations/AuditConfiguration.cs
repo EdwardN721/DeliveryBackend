@@ -1,6 +1,6 @@
 using Delivery.Core.Entities;
-using Delivery.Core.Entities.Catalog;
 using Microsoft.EntityFrameworkCore;
+using Delivery.Core.Entities.Catalog;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Delivery.Infrastructure.Configurations;
@@ -11,7 +11,7 @@ public abstract class AuditConfiguration
     {
         builder.Property(x => x.CreatedAt)
             .IsRequired()
-            .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.Property(x => x.UpdatedAt)
             .IsRequired(false);
@@ -35,7 +35,7 @@ public abstract class AuditConfiguration
     {
         builder.Property(x => x.CreatedAt)
             .IsRequired()
-            .HasDefaultValueSql("SYSDATETIMEOFFSET()");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.Property(x => x.UpdatedAt)
             .IsRequired(false);

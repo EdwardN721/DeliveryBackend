@@ -1,15 +1,66 @@
+# Infrastrucutre 
+Revisa el proyecto actual
+
+## Data
+Data/DeliveryDbContext
+```csharp
+using System.Reflection;
+using Microsoft.EntityFrameworkCore;
+using Delivery.Core.Entities.Billing;
+using Delivery.Core.Entities.Catalog;
+using Delivery.Core.Entities.Business;
+using Delivery.Core.Entities.Identity;
+using Delivery.Core.Entities.Transaction;
+
+namespace Delivery.Infrastructure.Data;
+
+public class DeliveryDbContext(DbContextOptions<DeliveryDbContext> options) : DbContext(options)
+{
+    // Identity
+    public DbSet<Usuario> Usuarios => Set<Usuario>();
+    public DbSet<Rol> Roles => Set<Rol>();
+    public DbSet<UsuarioDireccion> UsuarioDirecciones => Set<UsuarioDireccion>();
+
+    // Business
+    public DbSet<Personal> Empleados => Set<Personal>();
+    public DbSet<Producto> Productos => Set<Producto>();
+    public DbSet<Restaurante> Restaurantes => Set<Restaurante>();
+    public DbSet<RestauranteDireccion> RestauranteDirecciones => Set<RestauranteDireccion>();
+
+    // Catalog
+    public DbSet<Categoria> Categorias => Set<Categoria>();
+    public DbSet<EstadoPedido> EstadoPedidos => Set<EstadoPedido>();
+    public DbSet<MetodoPago> MetodoPagos => Set<MetodoPago>();
+
+    // Transaction
+    public DbSet<Pedido> Pedidos => Set<Pedido>();
+    public DbSet<PedidoDetalle> PedidoDetalles => Set<PedidoDetalle>();
+    
+    // Billing
+    public DbSet<Factura> Facturas => Set<Factura>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
+}
+```
+
+---
+## Interceptor
+Interceptor/AuditInterceptor
+```csharp
 using Delivery.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Delivery.Core.Entities.Catalog;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Delivery.Core.Interfaces;
 
 namespace Delivery.Infrastructure.Interceptors;
 
-public class AuditInterceptor(ICurrentUserService currentUserService) : SaveChangesInterceptor
+public class AuditInterceptor : SaveChangesInterceptor
 {
-    private readonly ICurrentUserService _currentUserService = currentUserService;
-
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
@@ -27,13 +78,13 @@ public class AuditInterceptor(ICurrentUserService currentUserService) : SaveChan
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatedAt = DateTimeOffset.UtcNow;
-                entry.Entity.CreatedBy = _currentUserService.ObtenerUsuario();
+                entry.Entity.CreatedBy = "System"; // Como agrego el usuario que esta haciendo la modificacion?
             }
             
             if (entry.State == EntityState.Modified)
             {
                 entry.Entity.UpdatedAt = DateTimeOffset.UtcNow;
-                entry.Entity.UpdatedBy = _currentUserService.ObtenerUsuario();
+                entry.Entity.UpdatedBy = "System";
             }
 
             // Soft Delete Automático: Si intentan borrar, lo cambiamos a modificado y marcamos IsDeleted
@@ -50,13 +101,13 @@ public class AuditInterceptor(ICurrentUserService currentUserService) : SaveChan
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatedAt = DateTimeOffset.UtcNow;
-                entry.Entity.CreatedBy = _currentUserService.ObtenerUsuario();
+                entry.Entity.CreatedBy = "System";
             }
 
             if (entry.State == EntityState.Modified)
             {
                 entry.Entity.UpdatedAt = DateTimeOffset.UtcNow;
-                entry.Entity.UpdatedBy = _currentUserService.ObtenerUsuario();
+                entry.Entity.UpdatedBy = "System";
             }
 
             // Soft Delete Automático: Si intentan borrar, lo cambiamos a modificado y marcamos IsDeleted
@@ -71,3 +122,12 @@ public class AuditInterceptor(ICurrentUserService currentUserService) : SaveChan
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 }
+```
+
+---
+## Configurations
+Configurations/Billing/billig.md
+Configurations/Business/business.md
+Configurations/Catalog/catalog.md
+Configurations/Identity/Identity.md
+Configurations/Transaction/Transaction.md
