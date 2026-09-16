@@ -1,0 +1,13 @@
+.vscode
+
+Delivery.API/bin
+Delivery.API/obj
+
+Delivery.Application/bin
+Delivery.Application/obj
+
+Delivery.Core/bin
+Delivery.Core/obj
+
+Delivery.Infrastructure/bin
+Delivery.Infrastructure/obj
