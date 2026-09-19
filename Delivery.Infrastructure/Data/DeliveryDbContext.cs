@@ -8,8 +8,11 @@ using Delivery.Core.Entities.Transaction;
 
 namespace Delivery.Infrastructure.Data;
 
-public class DeliveryDbContext(DbContextOptions<DeliveryDbContext> options) : DbContext(options)
+public class DeliveryDbContext : DbContext
 {
+    public DeliveryDbContext(DbContextOptions<DeliveryDbContext> options) : base(options)
+    { }
+    
     // Identity
     public DbSet<Usuario> Usuarios => Set<Usuario>();
     public DbSet<Rol> Roles => Set<Rol>();
@@ -29,7 +32,7 @@ public class DeliveryDbContext(DbContextOptions<DeliveryDbContext> options) : Db
     // Transaction
     public DbSet<Pedido> Pedidos => Set<Pedido>();
     public DbSet<PedidoDetalle> PedidoDetalles => Set<PedidoDetalle>();
-    
+
     // Billing
     public DbSet<Factura> Facturas => Set<Factura>();
 
