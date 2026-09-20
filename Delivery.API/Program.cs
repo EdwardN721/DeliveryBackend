@@ -14,6 +14,9 @@ builder.Services.AddDbConfiguracion(builder.Configuration);
 // Agregar interceptores
 builder.Services.AddInterceptorsConfiguracion();
 
+// Agregar obtener usuario que modifico
+builder.Services.AddCurrentUserService();
+
 // Registrar Unit Of Work
 builder.Services.AddUnitOfWorkConfig();
 
@@ -26,11 +29,14 @@ builder.Services.AddExceptionHandlerConfiguracion();
 // Agregar versionamiento
 builder.Services.AddApiVersioningConfiguracion();
 
+//Agregar la configuración de OpenAPI
+builder.Services.AddDocumentacionConfiguracion();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    
+    app.UseScalarDocumentacion();
 }
 
 app.UseExceptionHandler();

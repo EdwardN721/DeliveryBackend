@@ -1,5 +1,8 @@
 using Asp.Versioning;
+using Delivery.Services;
+using Scalar.AspNetCore;
 using Delivery.Exceptions;
+using Delivery.Core.Interfaces;
 
 namespace Delivery.Extensions;
 
@@ -20,6 +23,9 @@ public static class ApiExtension
         return services;
     }
 
+    /// <summary>
+    /// Agregar configuracion de versionado
+    /// </summary>
     public static IServiceCollection AddApiVersioningConfiguracion(this IServiceCollection services)
     {
         services.AddApiVersioning(options =>
@@ -34,6 +40,13 @@ public static class ApiExtension
             options.GroupNameFormat = "'v'VVV"; 
             options.SubstituteApiVersionInUrl = true;
         });
+
+        return services;
+    }
+
+    public static IServiceCollection AddCurrentUserService(this IServiceCollection services)
+    {
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         return services;
     }
