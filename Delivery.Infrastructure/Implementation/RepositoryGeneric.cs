@@ -35,9 +35,9 @@ public class RepositoryGeneric<T>(DeliveryDbContext context) : IRepositoryGeneri
     }
 
     public async Task<T?> FirstOrDefaultAsync(
-        Expression<Func<T, bool>> predicate, 
-        bool disableTracking, 
-        CancellationToken cancellationToken = default, 
+        Expression<Func<T, bool>> predicate,
+        bool disableTracking,
+        CancellationToken cancellationToken = default,
         params Expression<Func<T, object>>[] includes)
     {
         IQueryable<T> query = _context.Set<T>();
@@ -56,19 +56,19 @@ public class RepositoryGeneric<T>(DeliveryDbContext context) : IRepositoryGeneri
     }
 
     public async Task<IEnumerable<T>> GetAllAsync(
-        bool disableTracking = false, 
+        bool disableTracking = false,
         CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = _context.Set<T>();
-        
+
         if (disableTracking) query = query.AsNoTracking();
 
         return await query.ToListAsync(cancellationToken);
     }
 
     public async Task<IEnumerable<T>> GetAsync(
-        Expression<Func<T, bool>> predicate, 
-        bool disableTracking = false, 
+        Expression<Func<T, bool>> predicate,
+        bool disableTracking = false,
         CancellationToken cancellationToken = default,
         params Expression<Func<T, object>>[] includes)
     {
@@ -89,11 +89,14 @@ public class RepositoryGeneric<T>(DeliveryDbContext context) : IRepositoryGeneri
 
     public async Task<T?> GetByIdAsync(object id, bool disableTracking = false, CancellationToken cancellationToken = default)
     {
-        if (disableTracking)
+        T? entity = await _context.Set<T>().FindAsync([id], cancellationToken);
+
+        if (entity != null && disableTracking)
         {
-            return await _context.Set<T>().FirstOrDefaultAsync(cancellationToken);
+            _context.Entry(entity).State = EntityState.Detached;
         }
-        return await _context.Set<T>().FindAsync([id], cancellationToken);
+
+        return entity;
     }
 
     public void Update(T entity)
