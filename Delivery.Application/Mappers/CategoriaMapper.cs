@@ -11,7 +11,7 @@ public static class CategoriaMapper
         return new Categoria
         {
             Nombre = command.Nombre,
-            Descripcion = command.Decripcion ?? "S/D"
+            Descripcion = command.Descripcion ?? "S/D"
         };
     }
 

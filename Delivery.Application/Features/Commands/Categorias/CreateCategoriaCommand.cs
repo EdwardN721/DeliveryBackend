@@ -6,5 +6,5 @@ namespace Delivery.Application.Features.Commands.Categorias;
 public class CreateCategoriaCommand : IRequest<Result<int>>
 {
     public string Nombre { get; init; } = string.Empty;
-    public string? Decripcion { get; init; }
+    public string? Descripcion { get; init; }
 }
