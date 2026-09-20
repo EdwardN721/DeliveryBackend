@@ -11,7 +11,6 @@ namespace Delivery.Application.Extensions;
 /// </summary>
 public static class ApplicationExtension
 {
-
     /// <summary>
     /// Agregar configuración de validadores
     /// </summary>
