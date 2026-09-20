@@ -23,6 +23,9 @@ builder.Services.AddValidatorConfiguracion();
 // Agregar manejador de excepciones
 builder.Services.AddExceptionHandlerConfiguracion();
 
+// Agregar versionamiento
+builder.Services.AddApiVersioningConfiguracion();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Delivery.Exceptions;
 
 namespace Delivery.Extensions;
@@ -15,6 +16,24 @@ public static class ApiExtension
         services.AddProblemDetails();
 
         services.AddExceptionHandler<GlobalExceptionHandler>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddApiVersioningConfiguracion(this IServiceCollection services)
+    {
+        services.AddApiVersioning(options =>
+        {
+            options.DefaultApiVersion = new ApiVersion(1, 0); 
+            options.AssumeDefaultVersionWhenUnspecified = true; 
+            options.ReportApiVersions = true; 
+        })
+        .AddMvc()
+        .AddApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'VVV"; 
+            options.SubstituteApiVersionInUrl = true;
+        });
 
         return services;
     }
