@@ -19,4 +19,6 @@ public class Pedido : BaseEntity
 
     public Guid DireccionId { get; set; }
     public virtual RestauranteDireccion Direccion { get; set; } = null!;
+
+    public virtual ICollection<PedidoDetalle> Detalles { get; set; } = new List<PedidoDetalle>();
 }
