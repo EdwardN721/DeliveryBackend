@@ -1,6 +1,5 @@
 using Asp.Versioning;
 using Delivery.Services;
-using Scalar.AspNetCore;
 using Delivery.Exceptions;
 using Delivery.Core.Interfaces;
 

@@ -16,9 +16,10 @@ public interface IRepositoryGeneric<T> where T : class
     /// Obtiene una lista de todos los objetos de la base de datos.
     /// </summary>
     /// <param name="disableTracking">Habilita la modificacion de datos.</param>
-    /// <param name="cancellationToken">Token de cancelacion</param>
-    /// <returns>Lista de objetos</returns>
-    Task<IEnumerable<T>> GetAllAsync(bool disableTracking = false, CancellationToken cancellationToken = default);
+    /// <param name="cancellationToken">Token de cancelacion.</param>
+    /// <param name="includeProperties">Propiedades a incluir en busqueda.</param>
+    /// <returns>Lista de objetos.</returns>
+    Task<IEnumerable<T>> GetAllAsync(bool disableTracking = false, CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includeProperties);
 
     /// <summary>
     /// Obtiene una lista de objetos que cumplan con la condición.

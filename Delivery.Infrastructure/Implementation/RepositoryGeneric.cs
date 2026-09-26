@@ -56,19 +56,25 @@ public class RepositoryGeneric<T>(DeliveryDbContext context) : IRepositoryGeneri
     }
 
     public async Task<IEnumerable<T>> GetAllAsync(
-        bool disableTracking = false,
-        CancellationToken cancellationToken = default)
+        bool disableTracking = true,
+        CancellationToken cancellationToken = default,
+        params Expression<Func<T, object>>[] includeProperties)
     {
         IQueryable<T> query = _context.Set<T>();
 
         if (disableTracking) query = query.AsNoTracking();
+
+        foreach (var includeProperty in includeProperties)
+        {
+            query = query.Include(includeProperty);
+        }
 
         return await query.ToListAsync(cancellationToken);
     }
 
     public async Task<IEnumerable<T>> GetAsync(
         Expression<Func<T, bool>> predicate,
-        bool disableTracking = false,
+        bool disableTracking = true,
         CancellationToken cancellationToken = default,
         params Expression<Func<T, object>>[] includes)
     {
@@ -80,7 +86,7 @@ public class RepositoryGeneric<T>(DeliveryDbContext context) : IRepositoryGeneri
         {
             foreach (var include in includes)
             {
-                query = query.Include(include.ToString());
+                query = query.Include(include);
             }
         }
 
