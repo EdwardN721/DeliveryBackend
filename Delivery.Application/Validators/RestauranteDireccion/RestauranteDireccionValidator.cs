@@ -1,5 +1,5 @@
 using FluentValidation;
-using Delivery.Application.Features.Commands.RestauranteDirecciones;
+using Delivery.Application.Features.Commands.Business.RestauranteDirecciones;
 
 namespace Delivery.Application.Validators.RestauranteDireccion;
 

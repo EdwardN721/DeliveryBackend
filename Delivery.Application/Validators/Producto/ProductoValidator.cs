@@ -1,5 +1,5 @@
 using FluentValidation;
-using Delivery.Application.Features.Commands.Productos;
+using Delivery.Application.Features.Commands.Business.Productos;
 
 namespace Delivery.Application.Validators.Producto;
 

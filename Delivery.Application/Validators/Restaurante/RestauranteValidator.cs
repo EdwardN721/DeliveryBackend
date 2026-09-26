@@ -1,5 +1,5 @@
 using FluentValidation;
-using Delivery.Application.Features.Commands.Restaurantes;
+using Delivery.Application.Features.Commands.Business.Restaurantes;
 
 namespace Delivery.Application.Validators.Restaurante;
 

@@ -2,10 +2,10 @@ using MediatR;
 using Asp.Versioning;
 using Delivery.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Delivery.Application.Features.Commands.Productos;
+using Delivery.Application.Features.Commands.Business.Productos;
 using Delivery.Core.Result;
 using Delivery.Application.Dto.Response;
-using Delivery.Application.Features.Queries.Productos;
+using Delivery.Application.Features.Queries.Business.Productos;
 
 namespace Delivery.Controllers.v1;
 

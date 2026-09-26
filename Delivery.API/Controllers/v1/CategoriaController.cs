@@ -4,8 +4,8 @@ using Delivery.Core.Result;
 using Delivery.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Delivery.Application.Dto.Response;
-using Delivery.Application.Features.Queries.Categorias;
-using Delivery.Application.Features.Commands.Categorias;
+using Delivery.Application.Features.Queries.Catalog.Categorias;
+using Delivery.Application.Features.Commands.Catalog.Categorias;
 
 namespace Delivery.Controllers.v1;
 

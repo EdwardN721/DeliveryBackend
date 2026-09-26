@@ -4,8 +4,8 @@ using Delivery.Core.Result;
 using Delivery.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Delivery.Application.Dto.Response;
-using Delivery.Application.Features.Queries.Restaurantes;
-using Delivery.Application.Features.Commands.Restaurantes;
+using Delivery.Application.Features.Queries.Business.Restaurantes;
+using Delivery.Application.Features.Commands.Business.Restaurantes;
 
 namespace Delivery.Controllers.v1;
 

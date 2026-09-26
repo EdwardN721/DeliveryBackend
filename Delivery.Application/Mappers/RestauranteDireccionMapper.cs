@@ -1,6 +1,6 @@
 using Delivery.Core.Entities.Business;
 using Delivery.Application.Dto.Response;
-using Delivery.Application.Features.Commands.RestauranteDirecciones;
+using Delivery.Application.Features.Commands.Business.RestauranteDirecciones;
 
 namespace Delivery.Application.Mappers;
 

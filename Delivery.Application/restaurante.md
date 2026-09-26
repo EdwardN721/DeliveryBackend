@@ -10,14 +10,14 @@
 - `Delivery.Application/Mappers/RestauranteMapper.cs` (nuevo) — MapToEntity / UpdateEntity / MapToDto
 - `Delivery.Application/Validators/Restaurante/RestauranteValidator.cs` (nuevo) — Crear, Actualizar, Eliminar
 - Commands:
-  - `Delivery.Application/Features/Commands/Restaurantes/CreateRestauranteCommand.cs`
-  - `Delivery.Application/Features/Commands/Restaurantes/UpdateRestauranteCommand.cs`
-  - `Delivery.Application/Features/Commands/Restaurantes/DeleteRestauranteCommand.cs`
-  - `Delivery.Application/Features/Commands/Restaurantes/RestauranteCommandHandler.cs`
+  - `Delivery.Application/Features/Commands/Business/Restaurantes/CreateRestauranteCommand.cs`
+  - `Delivery.Application/Features/Commands/Business/Restaurantes/UpdateRestauranteCommand.cs`
+  - `Delivery.Application/Features/Commands/Business/Restaurantes/DeleteRestauranteCommand.cs`
+  - `Delivery.Application/Features/Commands/Business/Restaurantes/RestauranteCommandHandler.cs`
 - Queries:
-  - `Delivery.Application/Features/Queries/Restaurantes/RestauranteListQuery.cs`
-  - `Delivery.Application/Features/Queries/Restaurantes/RestauranteByIdQuery.cs`
-  - `Delivery.Application/Features/Queries/Restaurantes/RestauranteQueryHandler.cs`
+  - `Delivery.Application/Features/Queries/Business/Restaurantes/RestauranteListQuery.cs`
+  - `Delivery.Application/Features/Queries/Business/Restaurantes/RestauranteByIdQuery.cs`
+  - `Delivery.Application/Features/Queries/Business/Restaurantes/RestauranteQueryHandler.cs`
 
 ### Delivery.API
 - `Delivery.API/Controllers/v1/RestauranteController.cs` (nuevo) — endpoints:
@@ -34,14 +34,14 @@
 - `Delivery.Application/Mappers/RestauranteDireccionMapper.cs` (nuevo)
 - `Delivery.Application/Validators/RestauranteDireccion/RestauranteDireccionValidator.cs` (nuevo)
 - Commands:
-  - `Delivery.Application/Features/Commands/RestauranteDirecciones/CreateRestauranteDireccionCommand.cs`
-  - `Delivery.Application/Features/Commands/RestauranteDirecciones/UpdateRestauranteDireccionCommand.cs`
-  - `Delivery.Application/Features/Commands/RestauranteDirecciones/DeleteRestauranteDireccionCommand.cs`
-  - `Delivery.Application/Features/Commands/RestauranteDirecciones/RestauranteDireccionCommandHandler.cs` — valida que el Restaurante exista (create y update)
+  - `Delivery.Application/Features/Commands/Business/RestauranteDirecciones/CreateRestauranteDireccionCommand.cs`
+  - `Delivery.Application/Features/Commands/Business/RestauranteDirecciones/UpdateRestauranteDireccionCommand.cs`
+  - `Delivery.Application/Features/Commands/Business/RestauranteDirecciones/DeleteRestauranteDireccionCommand.cs`
+  - `Delivery.Application/Features/Commands/Business/RestauranteDirecciones/RestauranteDireccionCommandHandler.cs` — valida que el Restaurante exista (create y update)
 - Queries:
-  - `Delivery.Application/Features/Queries/RestauranteDirecciones/RestauranteDireccionListQuery.cs` — filtro opcional por `RestauranteId`
-  - `Delivery.Application/Features/Queries/RestauranteDirecciones/RestauranteDireccionByIdQuery.cs`
-  - `Delivery.Application/Features/Queries/RestauranteDirecciones/RestauranteDireccionQueryHandler.cs` — incluye `Restaurante` para el nombre
+  - `Delivery.Application/Features/Queries/Business/RestauranteDirecciones/RestauranteDireccionListQuery.cs` — filtro opcional por `RestauranteId`
+  - `Delivery.Application/Features/Queries/Business/RestauranteDirecciones/RestauranteDireccionByIdQuery.cs`
+  - `Delivery.Application/Features/Queries/Business/RestauranteDirecciones/RestauranteDireccionQueryHandler.cs` — incluye `Restaurante` para el nombre
 
 ### Delivery.API
 - `Delivery.API/Controllers/v1/RestauranteDireccionController.cs` (nuevo) — endpoints:
@@ -56,13 +56,13 @@
 El FK `Producto.RestauranteId` existía en BD, pero el command no lo pedía, por lo que se insertaba `Guid.Empty` y fallaba la FK.
 
 Cambios:
-- `Delivery.Application/Features/Commands/Productos/CreateProductoCommand.cs` — agregado `RestauranteId` (Guid)
-- `Delivery.Application/Features/Commands/Productos/UpdateProductoCommand.cs` — agregado `RestauranteId`
+- `Delivery.Application/Features/Commands/Business/Productos/CreateProductoCommand.cs` — agregado `RestauranteId` (Guid)
+- `Delivery.Application/Features/Commands/Business/Productos/UpdateProductoCommand.cs` — agregado `RestauranteId`
 - `Delivery.Application/Mappers/ProductoMapper.cs` — asigna `RestauranteId` en create/update; mapea `RestauranteId` y `RestauranteNombre` al DTO
-- `Delivery.Application/Features/Commands/Productos/ProductoCommandHandler.cs` — valida que exista el Restaurante antes de crear/actualizar (`Producto.RestauranteInvalido`)
+- `Delivery.Application/Features/Commands/Business/Productos/ProductoCommandHandler.cs` — valida que exista el Restaurante antes de crear/actualizar (`Producto.RestauranteInvalido`)
 - `Delivery.Application/Validators/Producto/ProductoValidator.cs` — `RestauranteId` obligatorio en crear y actualizar
 - `Delivery.Application/Dto/Response/ProductoDto.cs` — agregado `RestauranteId` y `RestauranteNombre`
-- `Delivery.Application/Features/Queries/Productos/ProductoQueryHandler.cs` — incluye `Categoria` y `Restaurante` en las consultas por Id y listado
+- `Delivery.Application/Features/Queries/Business/Productos/ProductoQueryHandler.cs` — incluye `Categoria` y `Restaurante` en las consultas por Id y listado
 
 ## 4. Fixes adicionales
 
