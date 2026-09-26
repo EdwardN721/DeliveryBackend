@@ -5,7 +5,7 @@ using Delivery.Application.Mappers;
 using Delivery.Core.Entities.Catalog;
 using Delivery.Application.Dto.Response;
 
-namespace Delivery.Application.Features.Queries.Categorias;
+namespace Delivery.Application.Features.Queries.Catalog.Categorias;
 
 public class CategoriaQueryHandler(IUnitOfWork unitOfWork) :
     IRequestHandler<CategoriaByIdQuery, Result<CategoriaDto>>,

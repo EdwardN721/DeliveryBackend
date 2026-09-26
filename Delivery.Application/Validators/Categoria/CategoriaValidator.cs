@@ -1,5 +1,5 @@
 using FluentValidation;
-using Delivery.Application.Features.Commands.Categorias;
+using Delivery.Application.Features.Commands.Catalog.Categorias;
 
 namespace Delivery.Application.Validators.Categoria;
 

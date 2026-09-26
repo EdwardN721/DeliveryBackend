@@ -4,7 +4,7 @@ using Delivery.Core.Interfaces;
 using Delivery.Application.Mappers;
 using Delivery.Core.Entities.Catalog;
 
-namespace Delivery.Application.Features.Commands.Categorias;
+namespace Delivery.Application.Features.Commands.Catalog.Categorias;
 
 public class CategoriaCommandHandler(IUnitOfWork unitOfWork) : 
     IRequestHandler<CreateCategoriaCommand, Result<int>>,

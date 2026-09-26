@@ -9,7 +9,7 @@ using Delivery.Core.Interfaces;
 using Delivery.Application.Mappers;
 using Delivery.Core.Entities.Catalog;
 
-namespace Delivery.Application.Features.Commands.Categorias;
+namespace Delivery.Application.Features.Commands.Catalog.Categorias;
 
 public class CategoriaCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateCategoriaCommand, Result<int>>
 {
@@ -33,7 +33,7 @@ UpdateCategoriaCommand
 using MediatR;
 using Delivery.Core.Result;
 
-namespace Delivery.Application.Features.Commands.Categorias;
+namespace Delivery.Application.Features.Commands.Catalog.Categorias;
 
 public class UpdateCategoriaCommand :  IRequest<Result>
 {
@@ -52,7 +52,7 @@ using Delivery.Core.Interfaces;
 using Delivery.Application.Mappers;
 using Delivery.Core.Entities.Catalog;
 
-namespace Delivery.Application.Features.Commands.Categorias;
+namespace Delivery.Application.Features.Commands.Catalog.Categorias;
 
 public class CategoriaCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<CreateCategoriaCommand, Result<int>>
 {
@@ -76,7 +76,7 @@ using MediatR;
 using Delivery.Core.Result;
 using Delivery.Application.Dto.Response;
 
-namespace Delivery.Application.Features.Queries.Categorias;
+namespace Delivery.Application.Features.Queries.Catalog.Categorias;
 
 public record CategoriaQuery : IRequest<Result<CategoriaDto>>
 {
@@ -94,7 +94,7 @@ using Delivery.Application.Mappers;
 using Delivery.Core.Entities.Catalog;
 using Delivery.Application.Dto.Response;
 
-namespace Delivery.Application.Features.Queries.Categorias;
+namespace Delivery.Application.Features.Queries.Catalog.Categorias;
 
 public class CategoriaQueryHandler(IUnitOfWork unitOfWork) : 
     IRequestHandler<Result<CategoriaDto>>, 
@@ -125,7 +125,7 @@ mapper
 ```c#
 using Delivery.Core.Entities.Catalog;
 using Delivery.Application.Dto.Response;
-using Delivery.Application.Features.Commands.Categorias;
+using Delivery.Application.Features.Commands.Catalog.Categorias;
 
 namespace Delivery.Application.Mappers;
 

@@ -1,6 +1,6 @@
 using Delivery.Core.Entities.Catalog;
 using Delivery.Application.Dto.Response;
-using Delivery.Application.Features.Commands.Categorias;
+using Delivery.Application.Features.Commands.Catalog.Categorias;
 
 namespace Delivery.Application.Mappers;
 

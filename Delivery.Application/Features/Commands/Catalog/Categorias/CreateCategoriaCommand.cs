@@ -1,7 +1,7 @@
 using MediatR;
 using Delivery.Core.Result;
 
-namespace Delivery.Application.Features.Commands.Categorias;
+namespace Delivery.Application.Features.Commands.Catalog.Categorias;
 
 public class CreateCategoriaCommand : IRequest<Result<int>>
 {
