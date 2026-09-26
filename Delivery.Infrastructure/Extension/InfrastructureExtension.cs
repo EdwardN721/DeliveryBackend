@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Delivery.Infrastructure.Interceptors;
 using Delivery.Infrastructure.Implementation;
 using Microsoft.Extensions.DependencyInjection;
+using Delivery.Infrastructure.Settings;
 
 namespace Delivery.Infrastructure.Extension;
 
@@ -33,6 +34,20 @@ public static class InfrastructureExtension{
     public static IServiceCollection AddUnitOfWorkConfig(this IServiceCollection services)
     {
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddPasswordHasherConfig(this IServiceCollection services)
+    {
+        services.AddSingleton<IPasswordHasher, PasswordHasher>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddJwtConfig(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
 
         return services;
     }

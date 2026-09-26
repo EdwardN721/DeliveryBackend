@@ -20,6 +20,9 @@ builder.Services.AddCurrentUserService();
 // Registrar Unit Of Work
 builder.Services.AddUnitOfWorkConfig();
 
+// Registrar cifrado de contraseñas
+builder.Services.AddPasswordHasherConfig();
+
 // Registrar Validations
 builder.Services.AddValidatorConfiguracion();
 

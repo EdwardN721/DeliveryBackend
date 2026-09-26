@@ -19,7 +19,7 @@ public class RestauranteDireccionQueryHandler(IUnitOfWork unitOfWork) :
             predicate: rd => rd.Id == request.Id,
             disableTracking: true,
             cancellationToken: cancellationToken,
-            includes: rd => rd.Restaurante);
+            includes: rd => rd.Restaurante!);
 
         if (direccion == null)
         {
@@ -32,12 +32,12 @@ public class RestauranteDireccionQueryHandler(IUnitOfWork unitOfWork) :
     public async Task<Result<IEnumerable<RestauranteDireccionDto>>> Handle(RestauranteDireccionListQuery request, CancellationToken cancellationToken = default)
     {
         IEnumerable<RestauranteDireccion> direcciones = request.RestauranteId is null
-            ? await _unitOfWork.RestauranteDirecciones.GetAllAsync(true, cancellationToken, rd => rd.Restaurante)
+            ? await _unitOfWork.RestauranteDirecciones.GetAllAsync(true, cancellationToken, rd => rd.Restaurante!)
             : await _unitOfWork.RestauranteDirecciones.GetAsync(
                 predicate: rd => rd.RestauranteId == request.RestauranteId.Value,
                 disableTracking: true,
                 cancellationToken: cancellationToken,
-                includes: rd => rd.Restaurante);
+                includes: rd => rd.Restaurante!);
 
         return Result<IEnumerable<RestauranteDireccionDto>>.Success(direcciones.MapToDto());
     }
