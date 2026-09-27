@@ -17,9 +17,12 @@ public interface IRepositoryGeneric<T> where T : class
     /// </summary>
     /// <param name="disableTracking">Habilita la modificacion de datos.</param>
     /// <param name="cancellationToken">Token de cancelacion.</param>
-    /// <param name="includeProperties">Propiedades a incluir en busqueda.</param>
+    /// <param name="include">Propiedades a incluir en busqueda.</param>
     /// <returns>Lista de objetos.</returns>
-    Task<IEnumerable<T>> GetAllAsync(bool disableTracking = false, CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includeProperties);
+    Task<IEnumerable<T>> GetAllAsync(
+        bool disableTracking = true,
+        CancellationToken cancellationToken = default,
+        Func<IQueryable<T>, IQueryable<T>>? include = null);
 
     /// <summary>
     /// Obtiene una lista de objetos que cumplan con la condición.
@@ -28,8 +31,11 @@ public interface IRepositoryGeneric<T> where T : class
     /// <param name="disableTracking">Habilita la modificacion de datos.</param>
     /// <param name="cancellationToken">Token de cancelacion.</param>
     /// <returns>Lista de objetos filtrada.</returns>
-    Task<IEnumerable<T>> GetAsync(Expression<Func<T, bool>> predicate, bool disableTracking = false, CancellationToken cancellationToken = default, 
-    params Expression<Func<T, object>>[] includes);
+    Task<IEnumerable<T>> GetAsync(
+        Expression<Func<T, bool>> predicate,
+        Func<IQueryable<T>, IQueryable<T>>? include = null,
+        bool disableTracking = true,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Verifica si existe algún objeto que cumpla con la condición especificada.
@@ -45,10 +51,13 @@ public interface IRepositoryGeneric<T> where T : class
     /// <param name="predicate">Condición o parametros a definir.</param>
     /// <param name="disableTracking">Habilita la modificacion de datos.</param>
     /// <param name="cancellationToken">Token de cancelacion</param>
-    /// <param name="includes">Condicion de Join</param>
+    /// <param name="include">Condicion de Join</param>
     /// <returns>Regresa el primer objeto que cumpla con la condición o null si no existe ninguno.</returns>
-    Task<T?>  FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, bool disableTracking, CancellationToken cancellationToken = default, 
-        params Expression<Func<T, object>>[] includes);
+    Task<T?> FirstOrDefaultAsync(
+        Expression<Func<T, bool>> predicate,
+        Func<IQueryable<T>, IQueryable<T>>? include = null,
+        bool disableTracking = true,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Agrega una entidad a la base de datos.

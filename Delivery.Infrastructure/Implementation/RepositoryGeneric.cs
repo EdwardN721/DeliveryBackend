@@ -36,37 +36,34 @@ public class RepositoryGeneric<T>(DeliveryDbContext context) : IRepositoryGeneri
 
     public async Task<T?> FirstOrDefaultAsync(
         Expression<Func<T, bool>> predicate,
-        bool disableTracking,
-        CancellationToken cancellationToken = default,
-        params Expression<Func<T, object>>[] includes)
+        Func<IQueryable<T>, IQueryable<T>>? include = null,
+        bool disableTracking = true,
+        CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = _context.Set<T>();
 
         if (disableTracking) query = query.AsNoTracking();
 
-        if (includes != null && includes.Length > 0)
+        if (include != null) 
         {
-            foreach (var include in includes)
-            {
-                query = query.Include(include);
-            }
-
+            query = include(query);
         }
+
         return await query.FirstOrDefaultAsync(predicate, cancellationToken);
     }
 
     public async Task<IEnumerable<T>> GetAllAsync(
         bool disableTracking = true,
         CancellationToken cancellationToken = default,
-        params Expression<Func<T, object>>[] includeProperties)
+        Func<IQueryable<T>, IQueryable<T>>? include = null)
     {
         IQueryable<T> query = _context.Set<T>();
 
         if (disableTracking) query = query.AsNoTracking();
 
-        foreach (var includeProperty in includeProperties)
+        if (include != null)
         {
-            query = query.Include(includeProperty);
+            query = include(query);
         }
 
         return await query.ToListAsync(cancellationToken);
@@ -74,20 +71,17 @@ public class RepositoryGeneric<T>(DeliveryDbContext context) : IRepositoryGeneri
 
     public async Task<IEnumerable<T>> GetAsync(
         Expression<Func<T, bool>> predicate,
+        Func<IQueryable<T>, IQueryable<T>>? include = null,
         bool disableTracking = true,
-        CancellationToken cancellationToken = default,
-        params Expression<Func<T, object>>[] includes)
+        CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = _context.Set<T>();
 
         if (disableTracking) query = query.AsNoTracking();
 
-        if (includes != null && includes.Length > 0)
+        if (include != null)
         {
-            foreach (var include in includes)
-            {
-                query = query.Include(include);
-            }
+            query = include(query);
         }
 
         return await query.Where(predicate).ToListAsync(cancellationToken);

@@ -4,6 +4,7 @@ using Delivery.Core.Interfaces;
 using Delivery.Application.Mappers;
 using Delivery.Core.Entities.Identity;
 using Delivery.Application.Dto.Response;
+using Microsoft.EntityFrameworkCore;
 
 namespace Delivery.Application.Features.Queries.Identity.Usuarios;
 
@@ -17,9 +18,10 @@ public class UsuarioQueryHandler(IUnitOfWork unitOfWork) :
     {
         Usuario? usuario = await _unitOfWork.Usuarios.FirstOrDefaultAsync(
             predicate: u => u.Id == request.Id && !u.EsEliminado,
+            include: query => query
+                .Include(u => u.Roles),
             disableTracking: true,
-            cancellationToken: cancellationToken,
-            includes: u => u.Roles);
+            cancellationToken: cancellationToken);
 
         if (usuario == null)
         {
@@ -37,7 +39,8 @@ public class UsuarioQueryHandler(IUnitOfWork unitOfWork) :
                 && (string.IsNullOrWhiteSpace(request.Correo) || u.Correo == request.Correo),
             disableTracking: true,
             cancellationToken: cancellationToken,
-            includes: u => u.Roles);
+            include: query => query
+                .Include(u => u.Roles));
 
         return Result<IEnumerable<UsuarioDto>>.Success(usuarios.MapToDto());
     }

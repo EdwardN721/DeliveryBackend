@@ -2,6 +2,7 @@ using MediatR;
 using Delivery.Core.Result;
 using Delivery.Core.Interfaces;
 using Delivery.Application.Mappers;
+using Microsoft.EntityFrameworkCore;
 using Delivery.Core.Entities.Identity;
 
 namespace Delivery.Application.Features.Commands.Identity.Usuarios;
@@ -106,9 +107,9 @@ public class UsuarioCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher passw
     {
         return await _unitOfWork.Usuarios.FirstOrDefaultAsync(
             predicate: u => u.Id == id && !u.EsEliminado,
+            include: query => query.Include(u => u.Roles),
             disableTracking: false,
-            cancellationToken: cancellationToken,
-            includes: u => u.Roles);
+            cancellationToken: cancellationToken);
     }
 
     private async Task<Result> ValidarCorreoDisponible(string? correo, Guid? idExcluir, CancellationToken cancellationToken = default)

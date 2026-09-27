@@ -2,6 +2,7 @@ using MediatR;
 using Delivery.Core.Result;
 using System.Linq.Expressions;
 using Delivery.Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Delivery.Core.Entities.Identity;
 using Delivery.Application.Dto.Response;
 
@@ -22,7 +23,8 @@ public class LoginCommandHandler(IUnitOfWork unitOfWork, IPasswordHasher passwor
             predicate: queryBusquedaUsuario,
             disableTracking: true,
             cancellationToken: cancellationToken, 
-            includes: u => u.Roles
+            include: query => query
+                .Include(u => u.Roles)
         );
 
         if (usuario == null || !_passwordHasher.Verify(command.Password, usuario.Password))
