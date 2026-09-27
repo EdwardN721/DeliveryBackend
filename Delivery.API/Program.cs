@@ -23,6 +23,9 @@ builder.Services.AddUnitOfWorkConfig();
 // Registrar cifrado de contraseñas
 builder.Services.AddPasswordHasherConfig();
 
+// Registrar JWT y Autenticación
+builder.Services.AddJwtConfig(builder.Configuration);
+
 // Registrar Validations
 builder.Services.AddValidatorConfiguracion();
 
