@@ -18,6 +18,13 @@ public class PedidoDetalleConfiguration : IEntityTypeConfiguration<PedidoDetalle
             .IsRequired()
             .HasPrecision(18,2);
 
+        builder.Property(pd => pd.Impuesto)
+            .IsRequired()
+            .HasPrecision(18, 2);
+
+        builder.Property(pd => pd.Descuento)
+            .HasPrecision(18, 2);
+
         builder.HasOne(pd => pd.Pedido)
             .WithMany(p => p.Detalles)
             .HasForeignKey(pd => pd.PedidoId)

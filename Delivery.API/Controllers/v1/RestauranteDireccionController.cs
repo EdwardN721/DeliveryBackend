@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Delivery.Application.Dto.Response;
 using Delivery.Application.Features.Queries.Business.RestauranteDirecciones;
 using Delivery.Application.Features.Commands.Business.RestauranteDirecciones;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Delivery.Controllers.v1;
 
@@ -15,6 +16,7 @@ namespace Delivery.Controllers.v1;
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:ApiVersion}/[controller]")]
+[Authorize]
 public class RestauranteDireccionController(ISender sender, ILogger<RestauranteDireccionController> logger) : ControllerBase
 {
     private readonly ISender _sender = sender;

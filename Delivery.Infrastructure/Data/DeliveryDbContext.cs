@@ -16,13 +16,13 @@ public class DeliveryDbContext : DbContext
     // Identity
     public DbSet<Usuario> Usuarios => Set<Usuario>();
     public DbSet<Rol> Roles => Set<Rol>();
-    public DbSet<UsuarioDireccion> UsuarioDirecciones => Set<UsuarioDireccion>();
+    public DbSet<UsuarioDireccion> UsuarioDirecciones => base.Set<UsuarioDireccion>();
 
     // Business
     public DbSet<Personal> Empleados => Set<Personal>();
     public DbSet<Producto> Productos => Set<Producto>();
     public DbSet<Restaurante> Restaurantes => Set<Restaurante>();
-    public DbSet<RestauranteDireccion> RestauranteDirecciones => Set<RestauranteDireccion>();
+    public DbSet<RestauranteDireccion> RestauranteDirecciones => base.Set<RestauranteDireccion>();
 
     // Catalog
     public DbSet<Categoria> Categorias => Set<Categoria>();

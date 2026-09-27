@@ -1,6 +1,6 @@
 using Delivery.Core.Entities.Identity;
 
-namespace Delivery.Infrastructure;
+namespace Delivery.Core.Interfaces;
 
 public interface IJwtTokenGenerator
 {

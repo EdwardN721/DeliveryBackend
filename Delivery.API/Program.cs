@@ -45,8 +45,8 @@ if (app.Environment.IsDevelopment())
 app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuthentication(); // Primero pregunta: ¿Quién eres? (Lee el token)
+app.UseAuthorization();  // Luego pregunta: ¿Tienes permiso para entrar aquí?
 app.MapControllers();
 
 app.Run();

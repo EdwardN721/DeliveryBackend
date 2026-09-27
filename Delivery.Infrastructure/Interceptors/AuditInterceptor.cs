@@ -1,8 +1,8 @@
 using Delivery.Core.Entities;
+using Delivery.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Delivery.Core.Entities.Catalog;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Delivery.Core.Interfaces;
 
 namespace Delivery.Infrastructure.Interceptors;
 
@@ -19,6 +19,8 @@ public class AuditInterceptor(ICurrentUserService currentUserService) : SaveChan
         DbContext? dbContext = eventData.Context;
         if (dbContext is null) return base.SavingChangesAsync(eventData, result, cancellationToken);
 
+        string userId = _currentUserService.UserId ?? "Sistema";
+
         var entries = dbContext.ChangeTracker.Entries<BaseEntity>();
         var entriesCatalog = dbContext.ChangeTracker.Entries<BaseEntityCatalog>();
 
@@ -27,13 +29,13 @@ public class AuditInterceptor(ICurrentUserService currentUserService) : SaveChan
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatedAt = DateTimeOffset.UtcNow;
-                entry.Entity.CreatedBy = _currentUserService.ObtenerUsuario();
+                entry.Entity.CreatedBy = userId;
             }
             
             if (entry.State == EntityState.Modified)
             {
                 entry.Entity.UpdatedAt = DateTimeOffset.UtcNow;
-                entry.Entity.UpdatedBy = _currentUserService.ObtenerUsuario();
+                entry.Entity.UpdatedBy = userId;
             }
 
             // Soft Delete Automático: Si intentan borrar, lo cambiamos a modificado y marcamos IsDeleted
@@ -50,13 +52,13 @@ public class AuditInterceptor(ICurrentUserService currentUserService) : SaveChan
             if (entry.State == EntityState.Added)
             {
                 entry.Entity.CreatedAt = DateTimeOffset.UtcNow;
-                entry.Entity.CreatedBy = _currentUserService.ObtenerUsuario();
+                entry.Entity.CreatedBy = userId;
             }
 
             if (entry.State == EntityState.Modified)
             {
                 entry.Entity.UpdatedAt = DateTimeOffset.UtcNow;
-                entry.Entity.UpdatedBy = _currentUserService.ObtenerUsuario();
+                entry.Entity.UpdatedBy = userId;
             }
 
             // Soft Delete Automático: Si intentan borrar, lo cambiamos a modificado y marcamos IsDeleted

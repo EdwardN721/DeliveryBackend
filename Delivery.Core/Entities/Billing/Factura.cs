@@ -3,7 +3,7 @@ using Delivery.Core.Entities.Transaction;
 
 namespace Delivery.Core.Entities.Billing;
 
-public class Factura : BaseEntity
+public class Factura : BaseAuditableEntity 
 {
     public decimal Total { get; set; }
     public string UrlFactura { get; set; } = string.Empty;

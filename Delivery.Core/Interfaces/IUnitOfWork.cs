@@ -11,7 +11,7 @@ public interface IUnitOfWork : IDisposable
     // Identity
     IRepositoryGeneric<Rol> Roles { get; }
     IRepositoryGeneric<Usuario> Usuarios { get; }
-    IRepositoryGeneric<UsuarioDireccion> UsuarioDirecciones { get; }
+    IRepositoryGeneric<Entities.Identity.UsuarioDireccion> UsuarioDirecciones { get; }
 
     // Catalog
     IRepositoryGeneric<Categoria> Categorias { get; }
@@ -22,7 +22,7 @@ public interface IUnitOfWork : IDisposable
     IRepositoryGeneric<Personal> Empleados { get; }
     IRepositoryGeneric<Producto> Productos { get; }
     IRepositoryGeneric<Restaurante> Restaurantes { get; }
-    IRepositoryGeneric<RestauranteDireccion> RestauranteDirecciones { get; }
+    IRepositoryGeneric<Entities.Business.RestauranteDireccion> RestauranteDirecciones { get; }
 
     // Transaction
     IRepositoryGeneric<Pedido> Pedidos { get; }
