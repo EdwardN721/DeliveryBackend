@@ -17,9 +17,12 @@ public interface IRepositoryGeneric<T> where T : class
     /// </summary>
     /// <param name="disableTracking">Habilita la modificacion de datos.</param>
     /// <param name="cancellationToken">Token de cancelacion.</param>
-    /// <param name="includeProperties">Propiedades a incluir en busqueda.</param>
+    /// <param name="include">Propiedades a incluir en busqueda.</param>
     /// <returns>Lista de objetos.</returns>
-    Task<IEnumerable<T>> GetAllAsync(bool disableTracking = false, CancellationToken cancellationToken = default, params Expression<Func<T, object>>[] includeProperties);
+    Task<IEnumerable<T>> GetAllAsync(
+        bool disableTracking = true,
+        CancellationToken cancellationToken = default,
+        Func<IQueryable<T>, IQueryable<T>>? include = null);
 
     /// <summary>
     /// Obtiene una lista de objetos que cumplan con la condición.
@@ -28,8 +31,11 @@ public interface IRepositoryGeneric<T> where T : class
     /// <param name="disableTracking">Habilita la modificacion de datos.</param>
     /// <param name="cancellationToken">Token de cancelacion.</param>
     /// <returns>Lista de objetos filtrada.</returns>
-    Task<IEnumerable<T>> GetAsync(Expression<Func<T, bool>> predicate, bool disableTracking = false, CancellationToken cancellationToken = default, 
-    params Expression<Func<T, object>>[] includes);
+    Task<IEnumerable<T>> GetAsync(
+        Expression<Func<T, bool>> predicate,
+        Func<IQueryable<T>, IQueryable<T>>? include = null,
+        bool disableTracking = true,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Verifica si existe algún objeto que cumpla con la condición especificada.
@@ -45,10 +51,13 @@ public interface IRepositoryGeneric<T> where T : class
     /// <param name="predicate">Condición o parametros a definir.</param>
     /// <param name="disableTracking">Habilita la modificacion de datos.</param>
     /// <param name="cancellationToken">Token de cancelacion</param>
-    /// <param name="includes">Condicion de Join</param>
+    /// <param name="include">Condicion de Join</param>
     /// <returns>Regresa el primer objeto que cumpla con la condición o null si no existe ninguno.</returns>
-    Task<T?>  FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, bool disableTracking, CancellationToken cancellationToken = default, 
-        params Expression<Func<T, object>>[] includes);
+    Task<T?> FirstOrDefaultAsync(
+        Expression<Func<T, bool>> predicate,
+        Func<IQueryable<T>, IQueryable<T>>? include = null,
+        bool disableTracking = true,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Agrega una entidad a la base de datos.
@@ -89,4 +98,24 @@ public interface IRepositoryGeneric<T> where T : class
     /// </summary>
     /// <param name="entities">Entidades que se eliminarán.</param>
     void DeleteRange(IEnumerable<T> entities);
+
+    /// <summary>
+    /// Obtiene una lista paginada de entidades basada en los filtros y ordenamiento especificados.
+    /// </summary>
+    /// <param name="pageNumber">El número de la página que se desea consultar (iniciando en 1).</param>
+    /// <param name="pageSize">La cantidad máxima de elementos por página.</param>
+    /// <param name="predicate">Expresión lambda para filtrar los resultados de búsqueda.</param>
+    /// <param name="include">Función para incluir propiedades de navegación anidadas (Join).</param>
+    /// <param name="orderBy">Función para ordenar los resultados antes de paginarlos.</param>
+    /// <param name="disableTracking">Si es true, deshabilita el rastreo de EF Core para hacer la consulta más rápida (ideal para solo lectura).</param>
+    /// <param name="cancellationToken">Token para cancelar la operación asíncrona si es necesario.</param>
+    /// <returns>Una tupla que contiene los elementos de la página actual (Items) y el total absoluto de registros (TotalCount).</returns>
+    Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
+        int pageNumber,
+        int pageSize,
+        Expression<Func<T, bool>>? predicate = null,
+        Func<IQueryable<T>, IQueryable<T>>? include = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        bool disableTracking = true,
+        CancellationToken cancellationToken = default);
 }

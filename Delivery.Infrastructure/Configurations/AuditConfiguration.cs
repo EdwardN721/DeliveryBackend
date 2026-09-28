@@ -2,6 +2,7 @@ using Delivery.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Delivery.Core.Entities.Catalog;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Delivery.Core.Entities.Transaction;
 
 namespace Delivery.Infrastructure.Configurations;
 
@@ -53,5 +54,11 @@ public abstract class AuditConfiguration
         builder.Property(x => x.EsEliminado)
             .IsRequired()
             .HasDefaultValue(false);
+    }
+
+    public static void ConfigureAuditTransaction<T>(EntityTypeBuilder<T> builder) where T : BaseAuditableEntity
+    {
+        builder.Property(x => x.FechaCreacion)
+               .IsRequired();
     }
 }

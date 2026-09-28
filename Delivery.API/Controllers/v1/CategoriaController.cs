@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Delivery.Application.Dto.Response;
 using Delivery.Application.Features.Queries.Catalog.Categorias;
 using Delivery.Application.Features.Commands.Catalog.Categorias;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Delivery.Controllers.v1;
 
@@ -15,6 +16,7 @@ namespace Delivery.Controllers.v1;
 [ApiController]
 [ApiVersion("1.0")]
 [Route("api/v{version:ApiVersion}/[controller]")]
+[Authorize]
 public class CategoriaController(ISender sender, ILogger<CategoriaController> logger) : ControllerBase
 {
     private readonly ISender _sender = sender;

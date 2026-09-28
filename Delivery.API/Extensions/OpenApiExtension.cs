@@ -1,3 +1,4 @@
+using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 
 namespace Delivery.Extensions;
@@ -14,6 +15,25 @@ public static class OpenApiExtension
                 document.Info.Title = "Delivery Aplicación.";
                 document.Info.Description = "API de alto rendimiento construida con CQRS y MediatR.";
                 document.Info.Version = "v1";
+                
+                document.Components ??= new OpenApiComponents();
+                document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+
+                document.Components.SecuritySchemes.Add("Bearer", new OpenApiSecurityScheme
+                {
+                  Type = SecuritySchemeType.Http,
+                  Scheme = "bearer", 
+                  BearerFormat = "JWT",
+                  Description = "Ingresa el token JWT obtenido en el login."
+                });
+
+                document.Security ??= new List<OpenApiSecurityRequirement>();
+
+                document.Security.Add(new OpenApiSecurityRequirement
+                {
+                   [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+                });
+                
                 return Task.CompletedTask;
             });
         });

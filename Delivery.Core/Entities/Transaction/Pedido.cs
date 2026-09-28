@@ -4,9 +4,11 @@ using Delivery.Core.Entities.Identity;
 
 namespace Delivery.Core.Entities.Transaction;
 
-public class Pedido : BaseEntity
+public class Pedido : BaseAuditableEntity
 {
+    public decimal SubTotal { get; set; }
     public decimal Total { get; set; }
+    public decimal CostoEnvio { get; set; }
 
     public Guid UsuarioId { get; set; }
     public virtual Usuario Cliente { get; set; } = null!;
@@ -17,8 +19,8 @@ public class Pedido : BaseEntity
     public int EstadoPedidoId { get; set; }
     public virtual EstadoPedido EstadoPedido { get; set; } = null!;
 
-    public Guid DireccionId { get; set; }
-    public virtual RestauranteDireccion Direccion { get; set; } = null!;
+    public Guid DireccionEntregaId { get; set; }
+    public virtual UsuarioDireccion DireccionEntrega { get; set; } = null!;
 
     public virtual ICollection<PedidoDetalle> Detalles { get; set; } = new List<PedidoDetalle>();
 }

@@ -29,6 +29,6 @@ public class FacturaConfiguration : IEntityTypeConfiguration<Factura>
             .HasForeignKey(f => f.MetodoPagoId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        AuditConfiguration.ConfigureAuditBase(builder);
+        AuditConfiguration.ConfigureAuditTransaction(builder);
     }
 }

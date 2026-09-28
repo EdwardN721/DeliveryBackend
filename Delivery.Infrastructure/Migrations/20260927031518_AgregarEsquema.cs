@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Delivery.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class AgregarEsquema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -310,49 +310,52 @@ namespace Delivery.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pedido",
+                name: "Pedidos",
                 schema: "Transaction",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    SubTotal = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     Total = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
+                    CostoEnvio = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     UsuarioId = table.Column<Guid>(type: "uuid", nullable: false),
                     RestauranteId = table.Column<Guid>(type: "uuid", nullable: false),
                     EstadoPedidoId = table.Column<int>(type: "integer", nullable: false),
-                    DireccionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    DireccionEntregaId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedBy = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UpdatedBy = table.Column<string>(type: "text", nullable: true),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    EsActivo = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
-                    EsEliminado = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
+                    EsActivo = table.Column<bool>(type: "boolean", nullable: false),
+                    EsEliminado = table.Column<bool>(type: "boolean", nullable: false),
+                    FechaCreacion = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pedido", x => x.Id);
+                    table.PrimaryKey("PK_Pedidos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Pedido_EstadosPedidos_EstadoPedidoId",
+                        name: "FK_Pedidos_EstadosPedidos_EstadoPedidoId",
                         column: x => x.EstadoPedidoId,
                         principalSchema: "Catalog",
                         principalTable: "EstadosPedidos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Pedido_RestauranteDireccion_DireccionId",
-                        column: x => x.DireccionId,
-                        principalSchema: "Business",
-                        principalTable: "RestauranteDireccion",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Pedido_Restaurante_RestauranteId",
+                        name: "FK_Pedidos_Restaurante_RestauranteId",
                         column: x => x.RestauranteId,
                         principalSchema: "Business",
                         principalTable: "Restaurante",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Pedido_Usuarios_UsuarioId",
+                        name: "FK_Pedidos_UsuarioDirecciones_DireccionEntregaId",
+                        column: x => x.DireccionEntregaId,
+                        principalSchema: "Identity",
+                        principalTable: "UsuarioDirecciones",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Pedidos_Usuarios_UsuarioId",
                         column: x => x.UsuarioId,
                         principalSchema: "Identity",
                         principalTable: "Usuarios",
@@ -371,11 +374,12 @@ namespace Delivery.Infrastructure.Migrations
                     PedidoId = table.Column<Guid>(type: "uuid", nullable: false),
                     MetodoPagoId = table.Column<int>(type: "integer", nullable: false),
                     CreatedBy = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UpdatedBy = table.Column<string>(type: "text", nullable: true),
                     UpdatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    EsActivo = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
-                    EsEliminado = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
+                    EsActivo = table.Column<bool>(type: "boolean", nullable: false),
+                    EsEliminado = table.Column<bool>(type: "boolean", nullable: false),
+                    FechaCreacion = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -388,10 +392,10 @@ namespace Delivery.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Factura_Pedido_PedidoId",
+                        name: "FK_Factura_Pedidos_PedidoId",
                         column: x => x.PedidoId,
                         principalSchema: "Transaction",
-                        principalTable: "Pedido",
+                        principalTable: "Pedidos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -404,6 +408,8 @@ namespace Delivery.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Cantidad = table.Column<int>(type: "integer", nullable: false),
                     PrecioUnitario = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
+                    Impuesto = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
+                    Descuento = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     PedidoId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedBy = table.Column<string>(type: "text", nullable: false),
@@ -417,10 +423,10 @@ namespace Delivery.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_PedidoDetalles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PedidoDetalles_Pedido_PedidoId",
+                        name: "FK_PedidoDetalles_Pedidos_PedidoId",
                         column: x => x.PedidoId,
                         principalSchema: "Transaction",
-                        principalTable: "Pedido",
+                        principalTable: "Pedidos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -445,30 +451,6 @@ namespace Delivery.Infrastructure.Migrations
                 column: "PedidoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pedido_DireccionId",
-                schema: "Transaction",
-                table: "Pedido",
-                column: "DireccionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Pedido_EstadoPedidoId",
-                schema: "Transaction",
-                table: "Pedido",
-                column: "EstadoPedidoId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Pedido_RestauranteId",
-                schema: "Transaction",
-                table: "Pedido",
-                column: "RestauranteId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Pedido_UsuarioId",
-                schema: "Transaction",
-                table: "Pedido",
-                column: "UsuarioId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PedidoDetalles_PedidoId",
                 schema: "Transaction",
                 table: "PedidoDetalles",
@@ -479,6 +461,30 @@ namespace Delivery.Infrastructure.Migrations
                 schema: "Transaction",
                 table: "PedidoDetalles",
                 column: "ProductoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pedidos_DireccionEntregaId",
+                schema: "Transaction",
+                table: "Pedidos",
+                column: "DireccionEntregaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pedidos_EstadoPedidoId",
+                schema: "Transaction",
+                table: "Pedidos",
+                column: "EstadoPedidoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pedidos_RestauranteId",
+                schema: "Transaction",
+                table: "Pedidos",
+                column: "RestauranteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Pedidos_UsuarioId",
+                schema: "Transaction",
+                table: "Pedidos",
+                column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Personal_RestauranteId",
@@ -539,8 +545,8 @@ namespace Delivery.Infrastructure.Migrations
                 schema: "Business");
 
             migrationBuilder.DropTable(
-                name: "UsuarioDirecciones",
-                schema: "Identity");
+                name: "RestauranteDireccion",
+                schema: "Business");
 
             migrationBuilder.DropTable(
                 name: "UsuarioRoles",
@@ -551,7 +557,7 @@ namespace Delivery.Infrastructure.Migrations
                 schema: "Catalog");
 
             migrationBuilder.DropTable(
-                name: "Pedido",
+                name: "Pedidos",
                 schema: "Transaction");
 
             migrationBuilder.DropTable(
@@ -567,11 +573,7 @@ namespace Delivery.Infrastructure.Migrations
                 schema: "Catalog");
 
             migrationBuilder.DropTable(
-                name: "RestauranteDireccion",
-                schema: "Business");
-
-            migrationBuilder.DropTable(
-                name: "Usuarios",
+                name: "UsuarioDirecciones",
                 schema: "Identity");
 
             migrationBuilder.DropTable(
@@ -581,6 +583,10 @@ namespace Delivery.Infrastructure.Migrations
             migrationBuilder.DropTable(
                 name: "Restaurante",
                 schema: "Business");
+
+            migrationBuilder.DropTable(
+                name: "Usuarios",
+                schema: "Identity");
         }
     }
 }

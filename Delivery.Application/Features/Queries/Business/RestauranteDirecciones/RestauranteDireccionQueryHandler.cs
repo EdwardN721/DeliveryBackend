@@ -2,6 +2,7 @@ using MediatR;
 using Delivery.Core.Result;
 using Delivery.Core.Interfaces;
 using Delivery.Application.Mappers;
+using Microsoft.EntityFrameworkCore;
 using Delivery.Core.Entities.Business;
 using Delivery.Application.Dto.Response;
 
@@ -17,9 +18,10 @@ public class RestauranteDireccionQueryHandler(IUnitOfWork unitOfWork) :
     {
         RestauranteDireccion? direccion = await _unitOfWork.RestauranteDirecciones.FirstOrDefaultAsync(
             predicate: rd => rd.Id == request.Id,
+            include: query => query 
+                .Include(rd => rd.Restaurante),
             disableTracking: true,
-            cancellationToken: cancellationToken,
-            includes: rd => rd.Restaurante);
+            cancellationToken: cancellationToken);
 
         if (direccion == null)
         {
@@ -32,12 +34,15 @@ public class RestauranteDireccionQueryHandler(IUnitOfWork unitOfWork) :
     public async Task<Result<IEnumerable<RestauranteDireccionDto>>> Handle(RestauranteDireccionListQuery request, CancellationToken cancellationToken = default)
     {
         IEnumerable<RestauranteDireccion> direcciones = request.RestauranteId is null
-            ? await _unitOfWork.RestauranteDirecciones.GetAllAsync(true, cancellationToken, rd => rd.Restaurante)
+            ? await _unitOfWork.RestauranteDirecciones.GetAllAsync(
+                disableTracking: true, 
+                cancellationToken: cancellationToken, 
+                include: query => query.Include(rd => rd.Restaurante))
             : await _unitOfWork.RestauranteDirecciones.GetAsync(
                 predicate: rd => rd.RestauranteId == request.RestauranteId.Value,
+                include: query => query.Include(rd => rd.Restaurante),
                 disableTracking: true,
-                cancellationToken: cancellationToken,
-                includes: rd => rd.Restaurante);
+                cancellationToken: cancellationToken);
 
         return Result<IEnumerable<RestauranteDireccionDto>>.Success(direcciones.MapToDto());
     }

@@ -29,23 +29,20 @@ namespace Delivery.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("EsActivo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("EsEliminado")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset>("FechaCreacion")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("MetodoPagoId")
                         .HasColumnType("integer");
@@ -597,33 +594,38 @@ namespace Delivery.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<decimal>("CostoEnvio")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
                     b.Property<DateTimeOffset>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("DireccionId")
+                    b.Property<Guid>("DireccionEntregaId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("EsActivo")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("EsEliminado")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
+                        .HasColumnType("boolean");
 
                     b.Property<int>("EstadoPedidoId")
                         .HasColumnType("integer");
 
+                    b.Property<DateTimeOffset>("FechaCreacion")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<Guid>("RestauranteId")
                         .HasColumnType("uuid");
+
+                    b.Property<decimal>("SubTotal")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<decimal>("Total")
                         .HasPrecision(18, 2)
@@ -640,7 +642,7 @@ namespace Delivery.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DireccionId");
+                    b.HasIndex("DireccionEntregaId");
 
                     b.HasIndex("EstadoPedidoId");
 
@@ -648,7 +650,7 @@ namespace Delivery.Infrastructure.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Pedido", "Transaction");
+                    b.ToTable("Pedidos", "Transaction");
                 });
 
             modelBuilder.Entity("Delivery.Core.Entities.Transaction.PedidoDetalle", b =>
@@ -669,6 +671,10 @@ namespace Delivery.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<decimal>("Descuento")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
                     b.Property<bool>("EsActivo")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -678,6 +684,10 @@ namespace Delivery.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
+
+                    b.Property<decimal>("Impuesto")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<Guid>("PedidoId")
                         .HasColumnType("uuid");
@@ -800,9 +810,9 @@ namespace Delivery.Infrastructure.Migrations
 
             modelBuilder.Entity("Delivery.Core.Entities.Transaction.Pedido", b =>
                 {
-                    b.HasOne("Delivery.Core.Entities.Business.RestauranteDireccion", "Direccion")
+                    b.HasOne("Delivery.Core.Entities.Identity.UsuarioDireccion", "DireccionEntrega")
                         .WithMany()
-                        .HasForeignKey("DireccionId")
+                        .HasForeignKey("DireccionEntregaId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -826,7 +836,7 @@ namespace Delivery.Infrastructure.Migrations
 
                     b.Navigation("Cliente");
 
-                    b.Navigation("Direccion");
+                    b.Navigation("DireccionEntrega");
 
                     b.Navigation("EstadoPedido");
 

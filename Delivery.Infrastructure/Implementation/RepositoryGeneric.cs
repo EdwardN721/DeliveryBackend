@@ -36,37 +36,34 @@ public class RepositoryGeneric<T>(DeliveryDbContext context) : IRepositoryGeneri
 
     public async Task<T?> FirstOrDefaultAsync(
         Expression<Func<T, bool>> predicate,
-        bool disableTracking,
-        CancellationToken cancellationToken = default,
-        params Expression<Func<T, object>>[] includes)
+        Func<IQueryable<T>, IQueryable<T>>? include = null,
+        bool disableTracking = true,
+        CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = _context.Set<T>();
 
         if (disableTracking) query = query.AsNoTracking();
 
-        if (includes != null && includes.Length > 0)
+        if (include != null) 
         {
-            foreach (var include in includes)
-            {
-                query = query.Include(include);
-            }
-
+            query = include(query);
         }
+
         return await query.FirstOrDefaultAsync(predicate, cancellationToken);
     }
 
     public async Task<IEnumerable<T>> GetAllAsync(
         bool disableTracking = true,
         CancellationToken cancellationToken = default,
-        params Expression<Func<T, object>>[] includeProperties)
+        Func<IQueryable<T>, IQueryable<T>>? include = null)
     {
         IQueryable<T> query = _context.Set<T>();
 
         if (disableTracking) query = query.AsNoTracking();
 
-        foreach (var includeProperty in includeProperties)
+        if (include != null)
         {
-            query = query.Include(includeProperty);
+            query = include(query);
         }
 
         return await query.ToListAsync(cancellationToken);
@@ -74,20 +71,17 @@ public class RepositoryGeneric<T>(DeliveryDbContext context) : IRepositoryGeneri
 
     public async Task<IEnumerable<T>> GetAsync(
         Expression<Func<T, bool>> predicate,
+        Func<IQueryable<T>, IQueryable<T>>? include = null,
         bool disableTracking = true,
-        CancellationToken cancellationToken = default,
-        params Expression<Func<T, object>>[] includes)
+        CancellationToken cancellationToken = default)
     {
         IQueryable<T> query = _context.Set<T>();
 
         if (disableTracking) query = query.AsNoTracking();
 
-        if (includes != null && includes.Length > 0)
+        if (include != null)
         {
-            foreach (var include in includes)
-            {
-                query = query.Include(include);
-            }
+            query = include(query);
         }
 
         return await query.Where(predicate).ToListAsync(cancellationToken);
@@ -113,5 +107,32 @@ public class RepositoryGeneric<T>(DeliveryDbContext context) : IRepositoryGeneri
     public void UpdateRange(IEnumerable<T> entities)
     {
         _context.Set<T>().UpdateRange(entities);
+    }
+
+    public async Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
+        int pageNumber,
+        int pageSize,
+        Expression<Func<T, bool>>? predicate = null,
+        Func<IQueryable<T>, IQueryable<T>>? include = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        bool disableTracking = true,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<T> query = _context.Set<T>();
+
+        if (disableTracking) query = query.AsNoTracking();
+        if (include != null) query = include(query);
+        if (predicate != null) query = query.Where(predicate);
+
+        // Contamos el total antes de paginar
+        int totalCount = await query.CountAsync(cancellationToken);
+
+        // Ordenamos
+        if (orderBy != null) query = orderBy(query);
+
+        // Paginamos en base de datos: Saltar (Pagina - 1) * Tamaño y Tomar (Tamaño)
+        var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+
+        return (items, totalCount);
     }
 }

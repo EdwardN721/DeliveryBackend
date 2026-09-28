@@ -2,5 +2,6 @@ namespace Delivery.Core.Interfaces;
 
 public interface ICurrentUserService
 {
-    string ObtenerUsuario();
+    string? UserId { get; }
+    bool IsAuthenticated { get; }
 }
