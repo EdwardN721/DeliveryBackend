@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Delivery.Application.Features.Commands.Transaction.Pedidos;
 using Delivery.Application.Features.Queries.Transaction.Pedidos;
 using Delivery.Application.Dto.Response;
+using System.Text.Json;
+using Delivery.Core.Pagination;
 
 namespace Delivery.Controllers.v1;
 
@@ -68,17 +70,18 @@ public class PedidoController(ISender sender) : ControllerBase
     }
 
     /// <summary>
-    /// Obtiene el historial de pedidos del usuario autenticado.
+    /// Obtiene el historial de pedidos del usuario autenticado de forma paginada y filtrada.
     /// </summary>
     [HttpGet("mis-pedidos")]
     [ProducesResponseType(typeof(IEnumerable<PedidoDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> GetMisPedidos()
+    public async Task<IActionResult> GetMisPedidos([FromQuery] GetMisPedidosQuery query)
     {
-        Result<IEnumerable<PedidoDto>> result = await sender.Send(new GetMisPedidosQuery());
+        Result<PagedList<PedidoDto>> result = await sender.Send(query);
 
         if (result.IsFailure)
             return BadRequest(result.Error);
+
+        Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(result.Value?.MetaData));
 
         return Ok(result.Value);
     }

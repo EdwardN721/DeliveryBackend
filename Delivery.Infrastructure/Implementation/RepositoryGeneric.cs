@@ -108,4 +108,31 @@ public class RepositoryGeneric<T>(DeliveryDbContext context) : IRepositoryGeneri
     {
         _context.Set<T>().UpdateRange(entities);
     }
+
+    public async Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
+        int pageNumber,
+        int pageSize,
+        Expression<Func<T, bool>>? predicate = null,
+        Func<IQueryable<T>, IQueryable<T>>? include = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        bool disableTracking = true,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<T> query = _context.Set<T>();
+
+        if (disableTracking) query = query.AsNoTracking();
+        if (include != null) query = include(query);
+        if (predicate != null) query = query.Where(predicate);
+
+        // Contamos el total antes de paginar
+        int totalCount = await query.CountAsync(cancellationToken);
+
+        // Ordenamos
+        if (orderBy != null) query = orderBy(query);
+
+        // Paginamos en base de datos: Saltar (Pagina - 1) * Tamaño y Tomar (Tamaño)
+        var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+
+        return (items, totalCount);
+    }
 }

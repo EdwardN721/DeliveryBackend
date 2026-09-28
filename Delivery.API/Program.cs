@@ -35,8 +35,11 @@ builder.Services.AddExceptionHandlerConfiguracion();
 // Agregar versionamiento
 builder.Services.AddApiVersioningConfiguracion();
 
-//Agregar la configuración de OpenAPI
+// Agregar la configuración de OpenAPI
 builder.Services.AddDocumentacionConfiguracion();
+
+// Registrar CORS
+builder.Services.AddCorsConfiguracion();
 
 var app = builder.Build();
 
@@ -48,6 +51,7 @@ if (app.Environment.IsDevelopment())
 app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
+app.UseCors("CorsPolicy");
 app.UseAuthentication(); // Primero pregunta: ¿Quién eres? (Lee el token)
 app.UseAuthorization();  // Luego pregunta: ¿Tienes permiso para entrar aquí?
 app.MapControllers();

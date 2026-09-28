@@ -98,4 +98,24 @@ public interface IRepositoryGeneric<T> where T : class
     /// </summary>
     /// <param name="entities">Entidades que se eliminarán.</param>
     void DeleteRange(IEnumerable<T> entities);
+
+    /// <summary>
+    /// Obtiene una lista paginada de entidades basada en los filtros y ordenamiento especificados.
+    /// </summary>
+    /// <param name="pageNumber">El número de la página que se desea consultar (iniciando en 1).</param>
+    /// <param name="pageSize">La cantidad máxima de elementos por página.</param>
+    /// <param name="predicate">Expresión lambda para filtrar los resultados de búsqueda.</param>
+    /// <param name="include">Función para incluir propiedades de navegación anidadas (Join).</param>
+    /// <param name="orderBy">Función para ordenar los resultados antes de paginarlos.</param>
+    /// <param name="disableTracking">Si es true, deshabilita el rastreo de EF Core para hacer la consulta más rápida (ideal para solo lectura).</param>
+    /// <param name="cancellationToken">Token para cancelar la operación asíncrona si es necesario.</param>
+    /// <returns>Una tupla que contiene los elementos de la página actual (Items) y el total absoluto de registros (TotalCount).</returns>
+    Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(
+        int pageNumber,
+        int pageSize,
+        Expression<Func<T, bool>>? predicate = null,
+        Func<IQueryable<T>, IQueryable<T>>? include = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        bool disableTracking = true,
+        CancellationToken cancellationToken = default);
 }
